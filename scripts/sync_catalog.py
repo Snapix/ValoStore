@@ -147,13 +147,25 @@ def flathub(data):
         })
     return out
 
+def winget_seed():
+    return [{
+        "id":"winget:VideoLAN.VLC","source":"WinGet","platform":"windows","appId":"VideoLAN.VLC",
+        "name":"VLC","summary":"Free and open source multimedia player.","description":"","descriptionHtml":"",
+        "categories":["AudioVideo"],"keywords":["media","player","video","audio"],"license":"GPL-2.0-or-later",
+        "developer":"VideoLAN","homepage":"https://www.videolan.org/vlc/","sourceCode":"https://code.videolan.org/videolan/vlc",
+        "icon":"https://cdn.simpleicons.org/vlc","screenshots":[],"version":"","updatedAt":None,
+        "install":{"type":"winget","source":"winget","appId":"VideoLAN.VLC","command":"winget install --id VideoLAN.VLC -e"},
+        "upstream":"https://github.com/microsoft/winget-pkgs/tree/master/manifests/v/VideoLAN/VLC"
+    }]
+
 def main():
     ap=argparse.ArgumentParser();ap.add_argument("--output",default="data/catalog.json");a=ap.parse_args()
     f=fdroid(json.loads(fetch(FDROID).decode()))
     h=flathub(fetch(FLATHUB))
-    apps=sorted(f+h,key=lambda x:(x["name"].casefold(),x["id"]))
+    w=winget_seed()
+    apps=sorted(f+h+w,key=lambda x:(x["name"].casefold(),x["id"]))
     if len(f)<100 or len(h)<100:raise RuntimeError(f"unexpectedly small sync: F-Droid={len(f)}, Flathub={len(h)}")
-    data={"schemaVersion":2,"generatedAt":datetime.now(timezone.utc).isoformat(),"sources":{"fdroid":{"name":"F-Droid","index":FDROID},"flathub":{"name":"Flathub","appstream":FLATHUB}},"counts":{"total":len(apps),"fdroid":len(f),"flathub":len(h)},"apps":apps}
+    data={"schemaVersion":2,"generatedAt":datetime.now(timezone.utc).isoformat(),"sources":{"fdroid":{"name":"F-Droid","index":FDROID},"flathub":{"name":"Flathub","appstream":FLATHUB}},"counts":{"total":len(apps),"fdroid":len(f),"flathub":len(h),"winget":len(w)},"apps":apps}
     p=Path(a.output);p.parent.mkdir(parents=True,exist_ok=True);tmp=p.with_suffix(".tmp");tmp.write_text(json.dumps(data,ensure_ascii=False,separators=(",",":")),encoding="utf-8");tmp.replace(p)
     print(json.dumps(data["counts"]))
 if __name__=="__main__":main()
