@@ -6,33 +6,58 @@ const sourceOrder={WinGet:0,'F-Droid':1,Flathub:2};
 const platformName={windows:'Windows',android:'Android',linux:'Linux'};
 const sourcePlatform={WinGet:'Windows','F-Droid':'Android',Flathub:'Linux'};
 
-function norm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
-function groupedResults(q){
-  const query=norm(q);
-  if(!query)return [];
-  const terms=query.split(' ').filter(Boolean);
-  const scored=apps.map(a=>{
-    const hay=norm([a.name,a.appId,a.summary,a.description,a.developer,a.source,...(a.categories||[]),...(a.keywords||[])].join(' '));
-    const n=norm(a.name);
-    let score=0;
-    if(n===query)score+=1000;
-    if(n.startsWith(query))score+=500;
-    if(n.includes(query))score+=250;
-    for(const t of terms)if(hay.includes(t))score+=35;
-    if(!score)return null;
-    return {a,score};
-  }).filter(Boolean);
-  const groups=new Map();
-  for(const {a,score} of scored){
-    const key=norm(a.name);
-    if(!groups.has(key))groups.set(key,{name:a.name,score:0,records:[]});
-    const g=groups.get(key);
-    g.score=Math.max(g.score,score);
-    if(!g.records.some(x=>x.id===a.id))g.records.push(a);
-  }
-  return [...groups.values()].sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
+function norm(value){
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
 }
 
+function scoreApp(app,query){
+  const q=norm(query);
+  if(!q)return 0;
+  const name=norm(app.name);
+  const id=norm(app.appId);
+  const developer=norm(app.developer);
+  if(q.length===1){
+    return (name.startsWith(q)||id.startsWith(q)) ? 1000 : 0;
+  }
+  let score=0;
+  if(name===q)score+=5000;
+  else if(name.startsWith(q))score+=3000;
+  else if(name.includes(q))score+=1800;
+  if(id===q)score+=2400;
+  else if(id.startsWith(q))score+=1500;
+  else if(id.includes(q))score+=700;
+  if(developer.startsWith(q))score+=900;
+  const hay=norm([
+    app.name,app.appId,app.summary,app.description,app.developer,
+    app.source,...(app.categories||[]),...(app.keywords||[])
+  ].join(" "));
+  for(const term of q.split(" ").filter(Boolean)){
+    if(name.split(" ").some(part=>part.startsWith(term)))score+=450;
+    else if(hay.includes(term))score+=80;
+    else return 0;
+  }
+  return score;
+}
+
+function groupedResults(q){
+  const query=q.trim();
+  if(!query)return [];
+  const groups=new Map();
+  for(const app of apps){
+    const score=scoreApp(app,query);
+    if(!score)continue;
+    const key=norm(app.name)||norm(app.appId);
+    if(!groups.has(key))groups.set(key,{name:app.name||app.appId,score:0,records:[]});
+    const g=groups.get(key);
+    g.score=Math.max(g.score,score);
+    if(!g.records.some(x=>x.id===app.id))g.records.push(app);
+  }
+  return [...groups.values()].sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name)).slice(0,40);
+}
 function iconFor(a,small=false){
   if(a?.icon)return '<img loading="lazy" src="'+esc(a.icon)+'" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML=\'<span class="icon-fallback">'+esc((a.name||'?').slice(0,1).toUpperCase())+'</span>\">';
   return '<span class="icon-fallback">'+esc((a?.name||'?').slice(0,1).toUpperCase())+'</span>';
@@ -80,14 +105,19 @@ function openGroup(group){
 
 async function boot(){
   try{
-    const r=await fetch('./data/catalog.json',{cache:'no-store'});
+    const r=await fetch(`./data/search-index.json?v=${Date.now()}`,{cache:'no-store'});
     if(!r.ok)throw new Error(String(r.status));
     const data=await r.json();
     apps=Array.isArray(data.apps)?data.apps:[];
+    const count=Number(data.counts?.total||apps.length).toLocaleString();
+    const generated=data.generatedAt?new Date(data.generatedAt):null;
+    $('.hint').textContent=generated&&!Number.isNaN(generated.getTime())
+      ? `${count} apps indexed · updated ${generated.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}`
+      : `${count} apps indexed`;
   }catch(e){
     apps=[];
+    $('.hint').textContent='Catalogue temporarily unavailable.';
     $('#resultTitle').textContent='Catalogue unavailable';
-    $('#resultCount').textContent='';
   }
 }
 $('#search').addEventListener('input',e=>{state.query=e.target.value;render()});
