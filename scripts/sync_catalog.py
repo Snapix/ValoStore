@@ -8,7 +8,7 @@ from pathlib import Path
 FDROID="https://f-droid.org/repo/index-v2.json"
 FDROID_REPO="https://f-droid.org/repo/"
 FLATHUB="https://dl.flathub.org/repo/appstream/x86_64/appstream.xml.gz"
-UA="ValoStoreCatalogSync/1.0"
+UA="ValoStoreCatalogSync/2.1"
 
 def fetch(url,timeout=90):
     req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept-Encoding":"gzip"})
@@ -195,8 +195,11 @@ def main():
     h=flathub(fetch(FLATHUB))
     w=winget_seed()
     apps=sorted(f+h+w,key=lambda x:(x["name"].casefold(),x["id"]))
-    if len(f)<100 or len(h)<100:raise RuntimeError(f"unexpectedly small sync: F-Droid={len(f)}, Flathub={len(h)}")
-    data={"schemaVersion":2,"generatedAt":datetime.now(timezone.utc).isoformat(),"sources":{"fdroid":{"name":"F-Droid","index":FDROID},"flathub":{"name":"Flathub","appstream":FLATHUB}},"counts":{"total":len(apps),"fdroid":len(f),"flathub":len(h),"winget":len(w)},"apps":apps}
+    if len(f)<1000 or len(h)<500:raise RuntimeError(f"unexpectedly small sync: F-Droid={len(f)}, Flathub={len(h)}")
+    data={"schemaVersion":3,"generatedAt":datetime.now(timezone.utc).isoformat(),"sources":{"fdroid":{"name":"F-Droid","index":FDROID},"flathub":{"name":"Flathub","appstream":FLATHUB}},"counts":{"total":len(apps),"fdroid":len(f),"flathub":len(h),"winget":len(w)},"apps":apps}
     p=Path(a.output);p.parent.mkdir(parents=True,exist_ok=True);tmp=p.with_suffix(".tmp");tmp.write_text(json.dumps(data,ensure_ascii=False,separators=(",",":")),encoding="utf-8");tmp.replace(p)
+    search_fields=("id","source","platform","appId","name","summary","categories","keywords","developer","license","icon","upstream","homepage","install","version","updatedAt")
+    search={"schemaVersion":data["schemaVersion"],"generatedAt":data["generatedAt"],"counts":data["counts"],"apps":[{k:a[k] for k in search_fields if k in a} for a in apps]}
+    sp=p.with_name("search-index.json");st=sp.with_suffix(".tmp");st.write_text(json.dumps(search,ensure_ascii=False,separators=(",",":")),encoding="utf-8");st.replace(sp)
     print(json.dumps(data["counts"]))
 if __name__=="__main__":main()
