@@ -46,9 +46,9 @@ def clean_value(v):
 def safe_html(v):
     v=clean_value(v)
     if not v:return ""
-    v=re.sub(r"<(script|style|iframe|object|embed)[^>]*>.*?</\\1>","",v,flags=re.I|re.S)
-    v=re.sub(r"\\s+(on[a-z]+|style)\\s*=\\s*([\"']).*?\\2","",v,flags=re.I|re.S)
-    v=re.sub(r"\\s+(href|src)\\s*=\\s*([\"'])\\s*javascript:[^\"']*\\2","",v,flags=re.I)
+    v=re.sub(r"<(script|style|iframe|object|embed)[^>]*>.*?</\1>","",v,flags=re.I|re.S)
+    v=re.sub(r"\s+(on[a-z]+|style)\\s*=\\s*([\"']).*?\\2","",v,flags=re.I|re.S)
+    v=re.sub(r"\s+(href|src)\\s*=\\s*([\"'])\\s*javascript:[^\"']*\\2","",v,flags=re.I)
     return v.strip()
 def loc(d):
     if not isinstance(d,dict):return {}
