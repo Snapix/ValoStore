@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ValoStore catalogue",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "sources",
+    "counts",
+    "apps"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "object"
+    },
+    "counts": {
+      "type": "object"
+    },
+    "apps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source",
+          "platform",
+          "appId",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "F-Droid",
+              "Flathub"
+            ]
+          },
+          "platform": {
+            "enum": [
+              "android",
+              "linux"
+            ]
+          },
+          "appId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
