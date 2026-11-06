@@ -69,6 +69,7 @@ a{text-decoration:none;color:inherit}
 .footer{position:fixed;bottom:0;left:0;right:0;text-align:center;padding:13px;background:#fffffff2;backdrop-filter:blur(10px);border-top:1px solid #eee;color:#aaa;font-size:10px}
 @media(max-width:650px){
 .mast{padding:20px 18px 0}.main{width:calc(100% - 30px);padding-bottom:90px}
+.hero{padding:48px 0 32px;border-radius:25px}
 .hero h1{font-size:31px;letter-spacing:-1.3px;margin-bottom:22px}
 .search-pill{height:62px;padding:0 18px;gap:12px}.search-pill input{font-size:16px}.key{display:none}
 .results{margin-top:40px}.result{grid-template-columns:48px minmax(0,1fr);gap:13px;padding:17px 0}.icon{width:48px;height:48px;border-radius:12px}.sources{grid-column:2;justify-content:flex-start;max-width:none;margin-top:-3px}.source{padding:7px 9px}
@@ -83,6 +84,8 @@ a{text-decoration:none;color:inherit}
 <header class="mast"><a class="wordmark" href="./">valo<span>store</span></a></header>
 <main class="main">
 <section class="hero">
+<div class="light-rays" aria-hidden="true"><canvas id="lightRays"></canvas></div>
+<div class="hero-content">
 <h1>What are you looking for?</h1>
 <label class="search-pill">
 <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
@@ -90,6 +93,7 @@ a{text-decoration:none;color:inherit}
 <span class="key">/</span>
 </label>
 <div class="hint">Search once. See where the app is available.</div>
+</div>
 </section>
 <section class="results" id="results" aria-live="polite">
 <div class="results-head"><h2 id="resultTitle">Results</h2><span id="resultCount"></span></div>
@@ -99,6 +103,7 @@ a{text-decoration:none;color:inherit}
 </main>
 <footer class="footer">ValoStore · upstream metadata from F-Droid, Flathub and WinGet</footer>
 </div>
-<script src="./app.js"></script>\n<script src="./effects.js"></script>
+<script src="./app.js"></script>
+<script src="./effects.js"></script>
 </body>
 </html>
