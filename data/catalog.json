@@ -1,285 +1,188 @@
 {
-  "schemaVersion": 1,
-  "generated": "curated-test",
+  "schemaVersion": 2,
+  "generatedAt": "bootstrap",
   "sources": {
-    "android": "F-Droid",
-    "linux": "Flathub",
-    "windows": "WinGet"
+    "fdroid": {
+      "name": "F-Droid",
+      "index": "https://f-droid.org/repo/index-v2.json"
+    },
+    "flathub": {
+      "name": "Flathub",
+      "appstream": "https://dl.flathub.org/repo/appstream/x86_64/appstream.xml.gz"
+    }
+  },
+  "counts": {
+    "total": 6,
+    "fdroid": 2,
+    "flathub": 4
   },
   "apps": [
     {
-      "slug": "vlc",
-      "name": "VLC",
-      "platforms": [
-        "linux",
-        "windows",
-        "android"
-      ],
-      "category": "Video",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet",
-        "F-Droid"
-      ],
-      "packageIds": {
-        "linux": "org.videolan.VLC",
-        "android": "org.videolan.vlc",
-        "windows": "VideoLAN.VLC"
-      }
-    },
-    {
-      "slug": "firefox",
-      "name": "Firefox",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Browser",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "org.mozilla.firefox",
-        "windows": "Mozilla.Firefox"
-      }
-    },
-    {
-      "slug": "gimp",
-      "name": "GIMP",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Graphics",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "org.gimp.GIMP",
-        "windows": "GIMP.GIMP"
-      }
-    },
-    {
-      "slug": "visual-studio-code",
-      "name": "Visual Studio Code",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Development",
-      "license": "Freeware",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "com.visualstudio.code",
-        "windows": "Microsoft.VisualStudioCode"
-      }
-    },
-    {
-      "slug": "telegram",
-      "name": "Telegram",
-      "platforms": [
-        "linux",
-        "windows",
-        "android"
-      ],
-      "category": "Communication",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet",
-        "Official"
-      ],
-      "packageIds": {
-        "linux": "org.telegram.desktop",
-        "windows": "Telegram.TelegramDesktop"
-      }
-    },
-    {
-      "slug": "signal",
-      "name": "Signal",
-      "platforms": [
-        "linux",
-        "windows",
-        "android"
-      ],
-      "category": "Communication",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet",
-        "Official"
-      ],
-      "packageIds": {
-        "linux": "org.signal.Signal",
-        "windows": "OpenWhisperSystems.Signal"
-      }
-    },
-    {
-      "slug": "kdenlive",
-      "name": "Kdenlive",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Video",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "org.kde.kdenlive",
-        "windows": "KDE.Kdenlive"
-      }
-    },
-    {
-      "slug": "keepassxc",
-      "name": "KeePassXC",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Security",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "org.keepassxc.KeePassXC",
-        "windows": "KeePassXCTeam.KeePassXC"
-      }
-    },
-    {
-      "slug": "libreoffice",
-      "name": "LibreOffice",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Office",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "org.libreoffice.LibreOffice",
-        "windows": "TheDocumentFoundation.LibreOffice"
-      }
-    },
-    {
-      "slug": "audacity",
-      "name": "Audacity",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Audio",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "org.audacityteam.Audacity",
-        "windows": "Audacity.Audacity"
-      }
-    },
-    {
-      "slug": "obs-studio",
-      "name": "OBS Studio",
-      "platforms": [
-        "linux",
-        "windows"
-      ],
-      "category": "Video",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
-      ],
-      "packageIds": {
-        "linux": "com.obsproject.Studio",
-        "windows": "OBSProject.OBSStudio"
-      }
-    },
-    {
-      "slug": "termux",
+      "id": "bootstrap:fdroid:com.termux",
+      "source": "F-Droid",
+      "platform": "android",
+      "appId": "com.termux",
       "name": "Termux",
-      "platforms": [
-        "android"
+      "summary": "Android terminal and Linux environment.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "Development"
       ],
-      "category": "Development",
-      "license": "Open source",
-      "sources": [
-        "F-Droid"
-      ],
-      "packageIds": {
-        "android": "com.termux"
-      }
+      "license": "GPL-3.0+",
+      "developer": "Termux",
+      "homepage": "https://termux.com/",
+      "sourceCode": "https://github.com/termux/termux-app",
+      "icon": "https://f-droid.org/repo/com.termux/en-US/icon.png",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "fdroid",
+        "appId": "com.termux",
+        "url": "https://f-droid.org/packages/com.termux/"
+      },
+      "upstream": "https://f-droid.org/packages/com.termux/"
     },
     {
-      "slug": "fossify-file-manager",
-      "name": "Fossify File Manager",
-      "platforms": [
-        "android"
+      "id": "bootstrap:fdroid:org.videolan.vlc",
+      "source": "F-Droid",
+      "platform": "android",
+      "appId": "org.videolan.vlc",
+      "name": "VLC",
+      "summary": "Media player for Android.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "Multimedia"
       ],
-      "category": "Utilities",
-      "license": "Open source",
-      "sources": [
-        "F-Droid"
-      ],
-      "packageIds": {
-        "android": "org.fossify.filemanager"
-      }
+      "license": "GPL-2.0-or-later",
+      "developer": "VideoLAN",
+      "homepage": "https://www.videolan.org/vlc/",
+      "sourceCode": "https://code.videolan.org/videolan/vlc-android",
+      "icon": "https://f-droid.org/repo/org.videolan.vlc/en-US/icon.png",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "fdroid",
+        "appId": "org.videolan.vlc",
+        "url": "https://f-droid.org/packages/org.videolan.vlc/"
+      },
+      "upstream": "https://f-droid.org/packages/org.videolan.vlc/"
     },
     {
-      "slug": "nextcloud",
-      "name": "Nextcloud",
-      "platforms": [
-        "linux",
-        "windows",
-        "android"
+      "id": "bootstrap:flathub:org.gimp.GIMP",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.gimp.GIMP",
+      "name": "GIMP",
+      "summary": "Image editor for photo retouching and design.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "Graphics"
       ],
-      "category": "Utilities",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet",
-        "F-Droid"
-      ],
-      "packageIds": {
-        "linux": "com.nextcloud.desktopclient.nextcloud",
-        "windows": "Nextcloud.Nextcloud",
-        "android": "com.nextcloud.client"
-      }
+      "license": "GPL-3.0+",
+      "developer": "The GIMP Team",
+      "homepage": "https://www.gimp.org/",
+      "sourceCode": "https://gitlab.gnome.org/GNOME/gimp/",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.gimp.GIMP.png",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.gimp.GIMP",
+        "command": "flatpak install flathub org.gimp.GIMP"
+      },
+      "upstream": "https://flathub.org/apps/org.gimp.GIMP"
     },
     {
-      "slug": "thunderbird",
-      "name": "Thunderbird",
-      "platforms": [
-        "linux",
-        "windows"
+      "id": "bootstrap:flathub:org.mozilla.firefox",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.mozilla.firefox",
+      "name": "Firefox",
+      "summary": "Fast, private web browser.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "Network"
       ],
-      "category": "Communication",
-      "license": "Open source",
-      "sources": [
-        "Flathub",
-        "WinGet"
+      "license": "MPL-2.0",
+      "developer": "Mozilla",
+      "homepage": "https://www.mozilla.org/firefox/",
+      "sourceCode": "https://github.com/mozilla-firefox/firefox",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.mozilla.firefox.png",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.mozilla.firefox",
+        "command": "flatpak install flathub org.mozilla.firefox"
+      },
+      "upstream": "https://flathub.org/apps/org.mozilla.firefox"
+    },
+    {
+      "id": "bootstrap:flathub:org.videolan.VLC",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.videolan.VLC",
+      "name": "VLC",
+      "summary": "Play most multimedia files.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "AudioVideo"
       ],
-      "packageIds": {
-        "linux": "org.mozilla.Thunderbird",
-        "windows": "Mozilla.Thunderbird"
-      }
+      "license": "GPL-2.0-or-later",
+      "developer": "VideoLAN",
+      "homepage": "https://www.videolan.org/vlc/",
+      "sourceCode": "https://code.videolan.org/videolan/vlc",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.videolan.VLC.png",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.videolan.VLC",
+        "command": "flatpak install flathub org.videolan.VLC"
+      },
+      "upstream": "https://flathub.org/apps/org.videolan.VLC"
+    },
+    {
+      "id": "bootstrap:flathub:org.kde.kdenlive",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.kde.kdenlive",
+      "name": "Kdenlive",
+      "summary": "Non-linear video editor.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "AudioVideo",
+        "Video"
+      ],
+      "license": "GPL-3.0-or-later",
+      "developer": "KDE",
+      "homepage": "https://kdenlive.org/",
+      "sourceCode": "https://invent.kde.org/multimedia/kdenlive",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.kde.kdenlive.png",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.kde.kdenlive",
+        "command": "flatpak install flathub org.kde.kdenlive"
+      },
+      "upstream": "https://flathub.org/apps/org.kde.kdenlive"
     }
   ]
 }
