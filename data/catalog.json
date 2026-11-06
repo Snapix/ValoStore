@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "generated": "curated-test",
+  "sources": {
+    "android": "F-Droid",
+    "linux": "Flathub",
+    "windows": "WinGet"
+  },
+  "apps": [
+    {
+      "slug": "vlc",
+      "name": "VLC",
+      "platforms": [
+        "linux",
+        "windows",
+        "android"
+      ],
+      "category": "Video",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet",
+        "F-Droid"
+      ],
+      "packageIds": {
+        "linux": "org.videolan.VLC",
+        "android": "org.videolan.vlc",
+        "windows": "VideoLAN.VLC"
+      }
+    },
+    {
+      "slug": "firefox",
+      "name": "Firefox",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Browser",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.mozilla.firefox",
+        "windows": "Mozilla.Firefox"
+      }
+    },
+    {
+      "slug": "gimp",
+      "name": "GIMP",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Graphics",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.gimp.GIMP",
+        "windows": "GIMP.GIMP"
+      }
+    },
+    {
+      "slug": "visual-studio-code",
+      "name": "Visual Studio Code",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Development",
+      "license": "Freeware",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "com.visualstudio.code",
+        "windows": "Microsoft.VisualStudioCode"
+      }
+    },
+    {
+      "slug": "telegram",
+      "name": "Telegram",
+      "platforms": [
+        "linux",
+        "windows",
+        "android"
+      ],
+      "category": "Communication",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet",
+        "Official"
+      ],
+      "packageIds": {
+        "linux": "org.telegram.desktop",
+        "windows": "Telegram.TelegramDesktop"
+      }
+    },
+    {
+      "slug": "signal",
+      "name": "Signal",
+      "platforms": [
+        "linux",
+        "windows",
+        "android"
+      ],
+      "category": "Communication",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet",
+        "Official"
+      ],
+      "packageIds": {
+        "linux": "org.signal.Signal",
+        "windows": "OpenWhisperSystems.Signal"
+      }
+    },
+    {
+      "slug": "kdenlive",
+      "name": "Kdenlive",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Video",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.kde.kdenlive",
+        "windows": "KDE.Kdenlive"
+      }
+    },
+    {
+      "slug": "keepassxc",
+      "name": "KeePassXC",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Security",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.keepassxc.KeePassXC",
+        "windows": "KeePassXCTeam.KeePassXC"
+      }
+    },
+    {
+      "slug": "libreoffice",
+      "name": "LibreOffice",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Office",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.libreoffice.LibreOffice",
+        "windows": "TheDocumentFoundation.LibreOffice"
+      }
+    },
+    {
+      "slug": "audacity",
+      "name": "Audacity",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Audio",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.audacityteam.Audacity",
+        "windows": "Audacity.Audacity"
+      }
+    },
+    {
+      "slug": "obs-studio",
+      "name": "OBS Studio",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Video",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "com.obsproject.Studio",
+        "windows": "OBSProject.OBSStudio"
+      }
+    },
+    {
+      "slug": "termux",
+      "name": "Termux",
+      "platforms": [
+        "android"
+      ],
+      "category": "Development",
+      "license": "Open source",
+      "sources": [
+        "F-Droid"
+      ],
+      "packageIds": {
+        "android": "com.termux"
+      }
+    },
+    {
+      "slug": "fossify-file-manager",
+      "name": "Fossify File Manager",
+      "platforms": [
+        "android"
+      ],
+      "category": "Utilities",
+      "license": "Open source",
+      "sources": [
+        "F-Droid"
+      ],
+      "packageIds": {
+        "android": "org.fossify.filemanager"
+      }
+    },
+    {
+      "slug": "nextcloud",
+      "name": "Nextcloud",
+      "platforms": [
+        "linux",
+        "windows",
+        "android"
+      ],
+      "category": "Utilities",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet",
+        "F-Droid"
+      ],
+      "packageIds": {
+        "linux": "com.nextcloud.desktopclient.nextcloud",
+        "windows": "Nextcloud.Nextcloud",
+        "android": "com.nextcloud.client"
+      }
+    },
+    {
+      "slug": "thunderbird",
+      "name": "Thunderbird",
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "category": "Communication",
+      "license": "Open source",
+      "sources": [
+        "Flathub",
+        "WinGet"
+      ],
+      "packageIds": {
+        "linux": "org.mozilla.Thunderbird",
+        "windows": "Mozilla.Thunderbird"
+      }
+    }
+  ]
+}
