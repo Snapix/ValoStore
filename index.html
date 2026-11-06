@@ -1,58 +1,104 @@
-<!-- ValoStore catalogue UI: refined production-oriented prototype. -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
-<meta name="description" content="Find open-source apps for Linux, Windows and Android.">
-<title>ValoStore — Open-source software</title>
+<meta name="description" content="Search software across Flathub, F-Droid and WinGet.">
+<title>ValoStore</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;750;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#1c64aa;--purple:#94669b;--ink:#251f32;--muted:#716d78;--line:#e6e4e8;--soft:#f7f6f8;--field:#f0eff2;--white:#fff;--green:#287b58;--radius:12px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--white);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}.shell{max-width:1180px;margin:auto;padding:0 28px}
-header{height:68px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:20}.top{height:100%;display:flex;align-items:center;gap:34px}.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:800;letter-spacing:-.8px;white-space:nowrap}.brandmark{width:29px;height:29px;background:var(--blue);color:#fff;border-radius:8px;display:grid;place-items:center;font-size:16px;font-weight:800}.nav{display:flex;align-items:center;gap:24px;color:#625d69;font-weight:550}.nav a{height:68px;display:flex;align-items:center;border-bottom:2px solid transparent}.nav a.active,.nav a:hover{color:var(--ink);border-color:var(--blue)}.top-right{margin-left:auto;display:flex;align-items:center;gap:12px}.source-note{font-size:12px;color:var(--muted)}.github{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 13px;font-weight:600;color:var(--ink)}.github:hover{background:var(--soft)}
-main{padding-bottom:70px}.intro{padding:45px 0 26px;display:flex;align-items:flex-end;justify-content:space-between;gap:28px}.eyebrow{color:var(--purple);font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:750;margin-bottom:12px}.intro h1{font-size:34px;letter-spacing:-1.5px;line-height:1.1;margin:0 0 10px;font-weight:750}.intro p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}.catalog-count{color:var(--muted);font-size:12px;white-space:nowrap;padding-bottom:4px}
-.platforms{display:flex;gap:7px;border-bottom:1px solid var(--line);padding-bottom:0}.platform{border:0;background:transparent;color:#6d6873;padding:13px 17px 14px;font-weight:650;border-bottom:2px solid transparent;margin-bottom:-1px}.platform:hover{color:var(--ink)}.platform[aria-selected=true]{color:var(--blue);border-color:var(--blue)}
-.toolbar{padding:20px 0 17px;display:flex;gap:10px;align-items:center}.searchbox{height:43px;background:var(--field);border-radius:8px;display:flex;align-items:center;gap:10px;padding:0 13px;flex:1;max-width:520px}.searchbox svg{width:17px;color:#797480;flex:none}.searchbox input{border:0;outline:0;background:transparent;width:100%;color:var(--ink);font-size:13px}.searchbox input::placeholder{color:#89848f}.select{height:42px;padding:0 32px 0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#514c58;font-size:12px;font-weight:550}.clear{border:0;background:none;color:var(--purple);font-weight:600;font-size:12px;padding:10px}
-.categories{display:flex;gap:7px;overflow:auto;padding:0 0 20px;scrollbar-width:none}.categories::-webkit-scrollbar{display:none}.chip{white-space:nowrap;padding:7px 12px;border:1px solid var(--line);border-radius:7px;background:#fff;color:#625d69;font-size:12px;font-weight:550}.chip:hover,.chip.selected{background:#f2edf4;border-color:#d9c9df;color:#67446f}
-.section-head{display:flex;justify-content:space-between;align-items:center;margin:5px 0 15px}.section-head h2{font-size:17px;letter-spacing:-.35px;margin:0;font-weight:700}.section-head span{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.app-card{min-width:0;border:1px solid var(--line);border-radius:10px;padding:15px 15px 13px;display:flex;gap:13px;transition:border-color .15s,background .15s;cursor:pointer;background:#fff}.app-card:hover{border-color:#c8bdcf;background:#fdfcfd}.app-icon{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;flex:none;overflow:hidden}.app-icon svg{width:32px;height:32px}.app-icon img{width:100%;height:100%;object-fit:cover}.app-info{min-width:0;flex:1}.app-title-row{display:flex;align-items:center;gap:7px;min-width:0}.app-title{font-size:14px;font-weight:700;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.badge{font-size:9px;text-transform:uppercase;letter-spacing:.45px;font-weight:750;padding:3px 5px;border-radius:4px;background:#edf4f9;color:#32658d;white-space:nowrap}.app-desc{color:var(--muted);font-size:11.5px;line-height:1.45;margin:6px 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:33px}.app-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#817c87;font-size:10px}.source{display:flex;align-items:center;gap:5px;white-space:nowrap}.source-dot{width:6px;height:6px;border-radius:50%;background:#639b76}.license{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.empty{padding:55px 20px;text-align:center;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-size:14px;margin-bottom:6px}.empty button{margin-top:12px;background:#f1edf3;border:0;color:#684b70;padding:8px 12px;border-radius:7px;font-weight:600}
-.notice{margin-top:27px;padding:13px 15px;border-radius:8px;background:#faf9fb;border:1px solid var(--line);color:#716c77;font-size:11px;line-height:1.55}.notice strong{color:var(--ink);font-weight:650}.footer{border-top:1px solid var(--line);padding:22px 0;color:#817c87;font-size:11px}.footer-inner{display:flex;justify-content:space-between;gap:20px}.footer a{color:var(--purple)}
-.overlay{position:fixed;inset:0;background:rgba(26,21,32,.35);z-index:40;display:none;align-items:center;justify-content:center;padding:20px}.overlay.open{display:flex}.dialog{background:#fff;width:min(610px,100%);max-height:min(84vh,760px);overflow:auto;border-radius:14px;box-shadow:0 18px 60px #1c142522}.dialog-head{padding:23px 24px 18px;display:flex;gap:15px;border-bottom:1px solid var(--line)}.dialog-icon{width:64px;height:64px;border-radius:14px;display:grid;place-items:center;flex:none}.dialog-icon svg{width:38px;height:38px}.dialog-title{min-width:0;flex:1}.dialog-title h2{margin:2px 0 5px;font-size:21px;letter-spacing:-.6px}.dialog-title p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.close{margin-left:auto;border:0;background:var(--soft);border-radius:7px;width:31px;height:31px;font-size:19px;color:#625d69;flex:none}.dialog-body{padding:20px 24px 24px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}.detail-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#89838f;margin-bottom:5px}.detail-value{font-size:12px;font-weight:600}.install-title{font-size:13px;font-weight:700;margin:0 0 9px}.install{background:#211d29;color:#f5f2f7;border-radius:8px;padding:13px 14px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;overflow:auto}.copy{border:1px solid #5a5361;color:#fff;background:#38313f;border-radius:6px;padding:6px 9px;font-size:10px;white-space:nowrap}.detail-actions{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap}.action{border:1px solid var(--line);background:#fff;border-radius:7px;padding:9px 12px;font-size:11px;font-weight:650}.action.primary{background:var(--blue);border-color:var(--blue);color:#fff}.detail-foot{margin-top:18px;color:#85808a;font-size:10px;line-height:1.5}
-@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{gap:15px}.source-note{display:none}}
-@media(max-width:600px){.shell{padding:0 17px}header{height:59px}.top{gap:16px}.brand{font-size:17px}.nav{gap:13px;overflow:auto}.nav a{height:59px;font-size:12px;white-space:nowrap}.nav a:nth-child(n+2){display:none}.top-right{gap:0}.github{font-size:11px;padding:8px 9px}.intro{padding:32px 0 20px;align-items:flex-start;flex-direction:column;gap:8px}.intro h1{font-size:29px}.toolbar{flex-wrap:wrap}.searchbox{max-width:none;flex-basis:100%}.select{flex:1}.grid{grid-template-columns:1fr;gap:9px}.app-card{padding:13px}.app-desc{min-height:0}.platform{padding:12px 13px;font-size:12px}.catalog-count{padding:0}.footer-inner{flex-direction:column;gap:8px}.dialog-head{padding:18px}.dialog-body{padding:17px 18px}.detail-grid{gap:12px}}
-.app-icon img{width:100%;height:100%;object-fit:cover}.app-icon span{width:100%;height:100%;display:block;background:#eee}.dialog-icon-img{width:64px;height:64px;border-radius:14px;object-fit:cover;background:#eee;flex:none}.upstream-description{font-size:13px;line-height:1.65;color:#42464a}.upstream-description p{margin:0 0 10px}.upstream-shots{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.upstream-shots img{width:100%;height:150px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}.app-card{box-shadow:0 1px 1px #1111}.app-card:hover{box-shadow:0 8px 24px #1111;transform:translateY(-1px)}.source-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5a9b79}@media(max-width:600px){.upstream-shots{grid-template-columns:1fr 1fr}.upstream-shots img{height:120px}}</style>
+:root{--ink:#151515;--muted:#777;--line:#e7e7e7;--soft:#f5f5f5;--blue:#1769d0;--green:#4c9b72}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.page{min-height:100vh;display:flex;flex-direction:column}
+.mast{padding:26px 28px 0;display:flex;justify-content:center}
+.wordmark{font-size:18px;font-weight:800;letter-spacing:-.7px}
+.wordmark span{color:var(--blue)}
+.main{width:min(900px,calc(100% - 36px));margin:auto;padding:0 0 120px}
+.hero{text-align:center;transition:.25s ease}
+.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.05;letter-spacing:-2px;margin:0 0 30px;font-weight:700}
+.search-pill{height:72px;width:100%;display:flex;align-items:center;gap:16px;padding:0 23px;border:1px solid #dcdcdc;border-radius:999px;background:#fff;box-shadow:0 8px 30px #0000000d;transition:.18s ease}
+.search-pill:focus-within{border-color:#b8b8b8;box-shadow:0 12px 38px #00000012}
+.search-icon{width:24px;height:24px;flex:none;color:#888}
+.search-pill input{border:0;outline:0;background:transparent;width:100%;font-size:19px;color:var(--ink);min-width:0}
+.search-pill input::placeholder{color:#999}
+.key{font-size:11px;color:#999;border:1px solid var(--line);border-radius:7px;padding:5px 8px;white-space:nowrap}
+.hint{margin-top:15px;color:#999;font-size:12px}
+.results{margin-top:56px;display:none}
+.results.visible{display:block}
+.results-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:17px}
+.results-head h2{margin:0;font-size:13px;font-weight:600;color:#777}
+.results-head span{font-size:12px;color:#aaa}
+.result-list{border-top:1px solid var(--line)}
+.result{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:18px;align-items:center;padding:21px 4px;border-bottom:1px solid var(--line);transition:.12s}
+.result:hover{background:#fafafa}
+.icon{width:64px;height:64px;border-radius:15px;overflow:hidden;background:#f1f1f1;display:grid;place-items:center}
+.icon img{width:100%;height:100%;object-fit:cover}
+.icon-fallback{font-size:23px;font-weight:700;color:#777}
+.name{font-size:17px;font-weight:700;letter-spacing:-.35px;margin-bottom:5px}
+.summary{font-size:12px;line-height:1.5;color:#777;max-width:650px}
+.ids{margin-top:7px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#aaa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sources{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;max-width:310px}
+.source{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:8px 11px;background:#fff;font-size:11px;font-weight:600;white-space:nowrap}
+.source i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.source .platform{font-weight:400;color:#999}
+.source:hover{border-color:#bbb}
+.empty{text-align:center;color:#888;padding:55px 20px;border-bottom:1px solid var(--line);font-size:13px}
+.empty strong{display:block;color:#333;margin-bottom:5px}
+.detail{display:none;margin-top:56px;border-top:1px solid var(--line);padding-top:25px}
+.detail.open{display:block}
+.detail-top{display:flex;gap:15px;align-items:center}
+.detail-icon{width:58px;height:58px;border-radius:14px;overflow:hidden;background:#f2f2f2}
+.detail-icon img{width:100%;height:100%;object-fit:cover}
+.detail-title h2{margin:0 0 4px;font-size:21px;letter-spacing:-.6px}
+.detail-title p{margin:0;color:#777;font-size:12px}
+.detail-sources{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.detail-source{border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:170px}
+.detail-source strong{display:block;font-size:12px;margin-bottom:4px}
+.detail-source small{display:block;color:#999;font-size:10px;margin-bottom:10px}
+.install{display:block;background:#181818;color:#fff;border-radius:9px;padding:10px 11px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto}
+.install.none{background:#f5f5f5;color:#777}
+.detail-actions{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.action{font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:8px;padding:8px 11px;background:#fff}
+.footer{position:fixed;bottom:0;left:0;right:0;text-align:center;padding:13px;background:#fffffff2;backdrop-filter:blur(10px);border-top:1px solid #eee;color:#aaa;font-size:10px}
+@media(max-width:650px){
+.mast{padding:20px 18px 0}.main{width:calc(100% - 30px);padding-bottom:90px}
+.hero h1{font-size:31px;letter-spacing:-1.3px;margin-bottom:22px}
+.search-pill{height:62px;padding:0 18px;gap:12px}.search-pill input{font-size:16px}.key{display:none}
+.results{margin-top:40px}.result{grid-template-columns:48px minmax(0,1fr);gap:13px;padding:17px 0}.icon{width:48px;height:48px;border-radius:12px}.sources{grid-column:2;justify-content:flex-start;max-width:none;margin-top:-3px}.source{padding:7px 9px}
+.ids{display:none}.summary{font-size:11px}.name{font-size:15px}
+.detail{margin-top:40px}.detail-source{min-width:0;width:100%}
+.footer{font-size:9px}
+}
+</style>
 </head>
 <body>
-<header><div class="shell top">
-<a class="brand" href="#"><span class="brandmark">v</span><span>valo<span style="color:var(--blue)">store</span></span></a>
-<nav class="nav" aria-label="Main navigation"><a class="active" href="#catalog">Discover</a><a href="#catalog" data-nav="linux">Linux</a><a href="#catalog" data-nav="windows">Windows</a><a href="#catalog" data-nav="android">Android</a></nav>
-<div class="top-right"><span class="source-note">Software catalogue</span><a class="github" href="https://github.com/Snapix/ValoStore" target="_blank" rel="noreferrer">GitHub ↗</a></div>
-</div></header>
-<main class="shell" id="catalog">
-<section class="intro"><div><div class="eyebrow">Open-source software</div><h1>Find your next app.</h1><p>Browse software for Linux, Windows and Android.</p></div><div class="catalog-count" id="count">18 applications</div></section>
-<div class="platforms" role="tablist" aria-label="Operating system">
-<button class="platform" data-platform="all" aria-selected="true">All platforms</button>
-<button class="platform" data-platform="linux" aria-selected="false">Linux</button>
-<button class="platform" data-platform="windows" aria-selected="false">Windows</button>
-<button class="platform" data-platform="android" aria-selected="false">Android</button>
-</div>
-<div class="toolbar">
-<label class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Search apps, categories, publishers…" autocomplete="off"></label>
-<select class="select" id="sort" aria-label="Sort"><option value="popular">Popular first</option><option value="name">Name A–Z</option><option value="updated">Recently updated</option></select>
-<select class="select" id="license" aria-label="License"><option value="all">Any license</option><option value="Open source">Open source</option><option value="Freeware">Freeware</option></select>
-<button class="clear" id="reset">Clear filters</button>
-</div>
-<div class="categories" id="categories" aria-label="Categories"></div>
-<div class="section-head"><h2 id="section-title">Popular apps</h2><span id="result-count">18 results</span></div>
-<div class="grid" id="grid"></div>
-
+<div class="page">
+<header class="mast"><a class="wordmark" href="./">valo<span>store</span></a></header>
+<main class="main">
+<section class="hero">
+<h1>What are you looking for?</h1>
+<label class="search-pill">
+<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+<input id="search" type="search" autocomplete="off" spellcheck="false" placeholder="Search software…" aria-label="Search software">
+<span class="key">/</span>
+</label>
+<div class="hint">Search once. See where the app is available.</div>
+</section>
+<section class="results" id="results" aria-live="polite">
+<div class="results-head"><h2 id="resultTitle">Results</h2><span id="resultCount"></span></div>
+<div class="result-list" id="resultList"></div>
+</section>
+<section class="detail" id="detail"></section>
 </main>
-<footer class="footer"><div class="shell footer-inner"><span>© 2026 ValoStore · Test build</span><span>Sources: <a href="https://flathub.org" target="_blank" rel="noreferrer">Flathub</a> · <a href="https://f-droid.org" target="_blank" rel="noreferrer">F-Droid</a> · <a href="https://github.com/microsoft/winget-pkgs" target="_blank" rel="noreferrer">WinGet</a></span></div></footer>
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-name"><article class="dialog"><div id="dialog-content"></div></article></div>
+<footer class="footer">ValoStore · upstream metadata from F-Droid, Flathub and WinGet</footer>
+</div>
 <script src="./app.js"></script>
-</body></html>
+</body>
+</html>
