@@ -58,8 +58,21 @@ def loc(d):
         if str(k).lower().startswith("en") and isinstance(v,dict):return v
     return next((v for v in d.values() if isinstance(v,dict)),{})
 
-def fdroid_icon(v):
-    return bool(v)
+def fdroid_media_name(v):
+    if isinstance(v,str): return v
+    if isinstance(v,dict):
+        for k in ("name","path","file","url"):
+            x=v.get(k)
+            if isinstance(x,str) and x:return x
+        for x in v.values():
+            y=fdroid_media_name(x)
+            if y:return y
+    return ""
+
+def fdroid_media_url(v):
+    name=fdroid_media_name(v).lstrip("/")
+    if not name:return ""
+    return name if name.startswith(("http://","https://")) else FDROID_REPO+name
 
 def fdroid(data):
     out=[]
@@ -78,6 +91,9 @@ def fdroid(data):
                 for item in v:
                     p=item.get("name") if isinstance(item,dict) else item
                     if p:screenshots.append(f"https://f-droid.org/repo/{appid}/en-US/{k}/{str(p).lstrip('/')}")
+        icon_entry=(raw.get("iconv2") or {}).get("en-US") if isinstance(raw.get("iconv2"),dict) else None
+        if not icon_entry and isinstance(raw.get("iconv2"),dict):
+            icon_entry=next(iter(raw.get("iconv2").values()),None)
         out.append({
             "id":"fdroid:"+appid,"source":"F-Droid","platform":"android","appId":appid,
             "name":clean_value(l.get("name") or meta.get("name") or appid),
@@ -89,7 +105,7 @@ def fdroid(data):
             "homepage":meta.get("webSite") or meta.get("website") or meta.get("homepage") or "",
             "sourceCode":meta.get("sourceCode") or meta.get("source_code") or "",
             "issueTracker":meta.get("issueTracker") or "",
-            "icon":f"https://f-droid.org/repo/{appid}/en-US/icon.png" if (raw.get("iconv2") or raw.get("icon") or l.get("icon")) else "",
+            "icon":fdroid_media_url(icon_entry) or f"{FDROID_REPO}{appid}/en-US/icon.png",
             "screenshots":list(dict.fromkeys(screenshots))[:12],
             "version":str(latest.get("versionName") or ""),
             "versionCode":latest.get("versionCode"),
