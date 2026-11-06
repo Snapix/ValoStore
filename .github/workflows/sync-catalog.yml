@@ -36,8 +36,21 @@ jobs:
         run: python scripts/sync_catalog.py
 
       - name: Validate generated JSON
-        run: python -m json.tool data/catalog.json >/dev/null
+        run: |
+          python -m json.tool data/catalog.json >/dev/null
           python -m json.tool data/search-index.json >/dev/null
+
+      - name: Check catalogue is not empty
+        run: |
+          python - <<'PY'
+          import json
+          with open("data/catalog.json", encoding="utf-8") as f:
+              data=json.load(f)
+          assert data["counts"]["fdroid"] >= 1000
+          assert data["counts"]["flathub"] >= 500
+          assert data["counts"]["total"] >= 1500
+          print(data["counts"])
+          PY
 
       - name: Publish changed catalogue
         run: |
