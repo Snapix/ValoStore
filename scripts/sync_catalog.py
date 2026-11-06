@@ -44,11 +44,7 @@ def loc(d):
     return next((v for v in d.values() if isinstance(v,dict)),{})
 
 def fdroid_icon(v):
-    if isinstance(v,dict):
-        if "name" in v:return FDROID_REPO+str(v["name"]).lstrip("/")
-        v=loc(v)
-    if isinstance(v,dict):v=v.get("name") or v.get("path") or ""
-    return FDROID_REPO+str(v).lstrip("/") if v else ""
+    return bool(v)
 
 def fdroid(data):
     out=[]
@@ -66,7 +62,7 @@ def fdroid(data):
             if str(k).lower().endswith("screenshots") and isinstance(v,list):
                 for item in v:
                     p=item.get("name") if isinstance(item,dict) else item
-                    if p:screenshots.append(FDROID_REPO+str(p).lstrip("/"))
+                    if p:screenshots.append(f"https://f-droid.org/repo/{appid}/en-US/{k}/{str(p).lstrip('/')}")
         out.append({
             "id":"fdroid:"+appid,"source":"F-Droid","platform":"android","appId":appid,
             "name":text(l.get("name") or meta.get("name") or appid),
@@ -78,7 +74,7 @@ def fdroid(data):
             "homepage":meta.get("webSite") or meta.get("website") or meta.get("homepage") or "",
             "sourceCode":meta.get("sourceCode") or meta.get("source_code") or "",
             "issueTracker":meta.get("issueTracker") or "",
-            "icon":fdroid_icon(raw.get("iconv2") or raw.get("icon") or l.get("icon")),
+            "icon":f"https://f-droid.org/repo/{appid}/en-US/icon.png" if (raw.get("iconv2") or raw.get("icon") or l.get("icon")) else "",
             "screenshots":list(dict.fromkeys(screenshots))[:12],
             "version":str(latest.get("versionName") or ""),
             "versionCode":latest.get("versionCode"),
