@@ -12,9 +12,10 @@
     }
   },
   "counts": {
-    "total": 6,
+    "total": 7,
     "fdroid": 2,
-    "flathub": 4
+    "flathub": 4,
+    "winget": 1
   },
   "apps": [
     {
@@ -183,6 +184,40 @@
         "command": "flatpak install flathub org.kde.kdenlive"
       },
       "upstream": "https://flathub.org/apps/org.kde.kdenlive"
+    },
+    {
+      "id": "bootstrap:winget:VideoLAN.VLC",
+      "source": "WinGet",
+      "platform": "windows",
+      "appId": "VideoLAN.VLC",
+      "name": "VLC",
+      "summary": "Free and open source multimedia player.",
+      "description": "",
+      "descriptionHtml": "",
+      "categories": [
+        "AudioVideo"
+      ],
+      "keywords": [
+        "media",
+        "player",
+        "video",
+        "audio"
+      ],
+      "license": "GPL-2.0-or-later",
+      "developer": "VideoLAN",
+      "homepage": "https://www.videolan.org/vlc/",
+      "sourceCode": "https://code.videolan.org/videolan/vlc",
+      "icon": "https://cdn.simpleicons.org/vlc",
+      "screenshots": [],
+      "version": "",
+      "updatedAt": null,
+      "install": {
+        "type": "winget",
+        "source": "winget",
+        "appId": "VideoLAN.VLC",
+        "command": "winget install --id VideoLAN.VLC -e"
+      },
+      "upstream": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/v/VideoLAN/VLC"
     }
   ]
 }
