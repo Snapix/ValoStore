@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "bootstrap",
+  "counts": {
+    "total": 7,
+    "fdroid": 2,
+    "flathub": 4,
+    "winget": 1
+  },
+  "apps": [
+    {
+      "id": "bootstrap:fdroid:com.termux",
+      "source": "F-Droid",
+      "platform": "android",
+      "appId": "com.termux",
+      "name": "Termux",
+      "summary": "Android terminal and Linux environment.",
+      "categories": [
+        "Development"
+      ],
+      "developer": "Termux",
+      "license": "GPL-3.0+",
+      "icon": "https://f-droid.org/repo/com.termux/en-US/icon.png",
+      "upstream": "https://f-droid.org/packages/com.termux/",
+      "homepage": "https://termux.com/",
+      "install": {
+        "type": "fdroid",
+        "appId": "com.termux",
+        "url": "https://f-droid.org/packages/com.termux/"
+      },
+      "version": "",
+      "updatedAt": null
+    },
+    {
+      "id": "bootstrap:fdroid:org.videolan.vlc",
+      "source": "F-Droid",
+      "platform": "android",
+      "appId": "org.videolan.vlc",
+      "name": "VLC",
+      "summary": "Media player for Android.",
+      "categories": [
+        "Multimedia"
+      ],
+      "developer": "VideoLAN",
+      "license": "GPL-2.0-or-later",
+      "icon": "https://f-droid.org/repo/org.videolan.vlc/en-US/icon.png",
+      "upstream": "https://f-droid.org/packages/org.videolan.vlc/",
+      "homepage": "https://www.videolan.org/vlc/",
+      "install": {
+        "type": "fdroid",
+        "appId": "org.videolan.vlc",
+        "url": "https://f-droid.org/packages/org.videolan.vlc/"
+      },
+      "version": "",
+      "updatedAt": null
+    },
+    {
+      "id": "bootstrap:flathub:org.gimp.GIMP",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.gimp.GIMP",
+      "name": "GIMP",
+      "summary": "Image editor for photo retouching and design.",
+      "categories": [
+        "Graphics"
+      ],
+      "developer": "The GIMP Team",
+      "license": "GPL-3.0+",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.gimp.GIMP.png",
+      "upstream": "https://flathub.org/apps/org.gimp.GIMP",
+      "homepage": "https://www.gimp.org/",
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.gimp.GIMP",
+        "command": "flatpak install flathub org.gimp.GIMP"
+      },
+      "version": "",
+      "updatedAt": null
+    },
+    {
+      "id": "bootstrap:flathub:org.mozilla.firefox",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.mozilla.firefox",
+      "name": "Firefox",
+      "summary": "Fast, private web browser.",
+      "categories": [
+        "Network"
+      ],
+      "developer": "Mozilla",
+      "license": "MPL-2.0",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.mozilla.firefox.png",
+      "upstream": "https://flathub.org/apps/org.mozilla.firefox",
+      "homepage": "https://www.mozilla.org/firefox/",
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.mozilla.firefox",
+        "command": "flatpak install flathub org.mozilla.firefox"
+      },
+      "version": "",
+      "updatedAt": null
+    },
+    {
+      "id": "bootstrap:flathub:org.videolan.VLC",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.videolan.VLC",
+      "name": "VLC",
+      "summary": "Play most multimedia files.",
+      "categories": [
+        "AudioVideo"
+      ],
+      "developer": "VideoLAN",
+      "license": "GPL-2.0-or-later",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.videolan.VLC.png",
+      "upstream": "https://flathub.org/apps/org.videolan.VLC",
+      "homepage": "https://www.videolan.org/vlc/",
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.videolan.VLC",
+        "command": "flatpak install flathub org.videolan.VLC"
+      },
+      "version": "",
+      "updatedAt": null
+    },
+    {
+      "id": "bootstrap:flathub:org.kde.kdenlive",
+      "source": "Flathub",
+      "platform": "linux",
+      "appId": "org.kde.kdenlive",
+      "name": "Kdenlive",
+      "summary": "Non-linear video editor.",
+      "categories": [
+        "AudioVideo",
+        "Video"
+      ],
+      "developer": "KDE",
+      "license": "GPL-3.0-or-later",
+      "icon": "https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/org.kde.kdenlive.png",
+      "upstream": "https://flathub.org/apps/org.kde.kdenlive",
+      "homepage": "https://kdenlive.org/",
+      "install": {
+        "type": "flatpak",
+        "remote": "flathub",
+        "appId": "org.kde.kdenlive",
+        "command": "flatpak install flathub org.kde.kdenlive"
+      },
+      "version": "",
+      "updatedAt": null
+    },
+    {
+      "id": "bootstrap:winget:VideoLAN.VLC",
+      "source": "WinGet",
+      "platform": "windows",
+      "appId": "VideoLAN.VLC",
+      "name": "VLC",
+      "summary": "Free and open source multimedia player.",
+      "categories": [
+        "AudioVideo"
+      ],
+      "keywords": [
+        "media",
+        "player",
+        "video",
+        "audio"
+      ],
+      "developer": "VideoLAN",
+      "license": "GPL-2.0-or-later",
+      "icon": "https://cdn.simpleicons.org/vlc",
+      "upstream": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/v/VideoLAN/VLC",
+      "homepage": "https://www.videolan.org/vlc/",
+      "install": {
+        "type": "winget",
+        "source": "winget",
+        "appId": "VideoLAN.VLC",
+        "command": "winget install --id VideoLAN.VLC -e"
+      },
+      "version": "",
+      "updatedAt": null
+    }
+  ]
+}
