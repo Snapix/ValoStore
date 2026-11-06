@@ -1,5 +1,8 @@
 const state={query:''};
 let apps=[];
+let liveApps=[];
+let liveController=null;
+let liveRequest=0;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sourceOrder={WinGet:0,'F-Droid':1,Flathub:2};
@@ -47,7 +50,7 @@ function groupedResults(q){
   const query=q.trim();
   if(!query)return [];
   const groups=new Map();
-  for(const app of apps){
+  for(const app of [...apps,...liveApps]){
     const score=scoreApp(app,query);
     if(!score)continue;
     const key=norm(app.name)||norm(app.appId);
@@ -120,9 +123,34 @@ async function boot(){
     $('#resultTitle').textContent='Catalogue unavailable';
   }
 }
-$('#search').addEventListener('input',e=>{state.query=e.target.value;render()});
+async function fetchLive(query){
+  const q=query.trim();
+  const request=++liveRequest;
+  if(liveController)liveController.abort();
+  liveController=new AbortController();
+  if(q.length<2){liveApps=[];return render();}
+  try{
+    const r=await fetch('./api/search?q='+encodeURIComponent(q),{signal:liveController.signal,cache:'no-store'});
+    if(!r.ok)return;
+    const data=await r.json();
+    if(request!==liveRequest||state.query.trim()!==q)return;
+    liveApps=Array.isArray(data.results)?data.results:[];
+    render();
+  }catch(e){
+    if(e.name!=='AbortError')liveApps=[];
+  }
+}
+
+let liveTimer;
+$('#search').addEventListener('input',e=>{
+  state.query=e.target.value;
+  liveApps=[];
+  render();
+  clearTimeout(liveTimer);
+  liveTimer=setTimeout(()=>fetchLive(state.query),180);
+});
 document.addEventListener('keydown',e=>{
   if(e.key==='/'&&document.activeElement!==$('#search')){e.preventDefault();$('#search').focus()}
-  if(e.key==='Escape'){$('#search').value='';state.query='';render();$('#search').blur()}
+  if(e.key==='Escape'){liveRequest++;if(liveController)liveController.abort();liveApps=[];$('#search').value='';state.query='';render();$('#search').blur()}
 });
 boot();
