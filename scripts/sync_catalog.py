@@ -28,13 +28,28 @@ def text(v):
     v=html.unescape(str(v))
     return re.sub(r"\s+"," ",re.sub(r"<[^>]+>"," ",v)).strip()
 
-def safe_html(v):
-    if not v:return ""
-    v=re.sub(r"<(script|style|iframe|object|embed)[^>]*>.*?</\1>","",v,flags=re.I|re.S)
-    v=re.sub(r"\s+(on[a-z]+|style)\s*=\s*([\"']).*?\2","",v,flags=re.I|re.S)
-    v=re.sub(r"\s+(href|src)\s*=\s*([\"'])\s*javascript:[^\"']*\2","",v,flags=re.I)
-    return v.strip()
+def clean_value(v):
+    if v is None:return ""
+    if isinstance(v,dict):
+        for k in ("en-US","en_US","en","C"):
+            if k in v:
+                x=clean_value(v[k])
+                if x:return x
+        for x in v.values():
+            x=clean_value(x)
+            if x:return x
+        return ""
+    if isinstance(v,list):
+        return " ".join(clean_value(x) for x in v if clean_value(x)).strip()
+    return str(v)
 
+def safe_html(v):
+    v=clean_value(v)
+    if not v:return ""
+    v=re.sub(r"<(script|style|iframe|object|embed)[^>]*>.*?</\\1>","",v,flags=re.I|re.S)
+    v=re.sub(r"\\s+(on[a-z]+|style)\\s*=\\s*([\"']).*?\\2","",v,flags=re.I|re.S)
+    v=re.sub(r"\\s+(href|src)\\s*=\\s*([\"'])\\s*javascript:[^\"']*\\2","",v,flags=re.I)
+    return v.strip()
 def loc(d):
     if not isinstance(d,dict):return {}
     for k in ("en-US","en_US","en"):
@@ -65,12 +80,12 @@ def fdroid(data):
                     if p:screenshots.append(f"https://f-droid.org/repo/{appid}/en-US/{k}/{str(p).lstrip('/')}")
         out.append({
             "id":"fdroid:"+appid,"source":"F-Droid","platform":"android","appId":appid,
-            "name":text(l.get("name") or meta.get("name") or appid),
-            "summary":text(l.get("summary") or meta.get("summary")),
+            "name":clean_value(l.get("name") or meta.get("name") or appid),
+            "summary":clean_value(l.get("summary") or meta.get("summary")),
             "descriptionHtml":safe_html(l.get("description") or meta.get("description")),
-            "description":text(l.get("description") or meta.get("description")),
-            "categories":[text(x) for x in cats if x],"license":text(meta.get("license") or raw.get("license")),
-            "developer":text(meta.get("authorName") or meta.get("author") or meta.get("developer")),
+            "description":clean_value(l.get("description") or meta.get("description")),
+            "categories":[clean_value(x) for x in cats if clean_value(x)],"license":clean_value(meta.get("license") or raw.get("license")),
+            "developer":clean_value(meta.get("authorName") or meta.get("author") or meta.get("developer")),
             "homepage":meta.get("webSite") or meta.get("website") or meta.get("homepage") or "",
             "sourceCode":meta.get("sourceCode") or meta.get("source_code") or "",
             "issueTracker":meta.get("issueTracker") or "",
