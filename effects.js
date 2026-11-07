@@ -1,145 +1,175 @@
 (() => {
-  const rayCanvas = document.getElementById('lightRays');
+  const auroraCanvas = document.getElementById('auroraCanvas');
   const glassCanvas = document.getElementById('glassNoise');
   const hero = document.querySelector('.hero');
-  if (!rayCanvas || !hero) return;
+  if (!auroraCanvas || !hero) return;
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MAX_STOPS = 5;
+  const MAX_LAYERS = 3;
 
-  function setupWebGL(canvas, fragmentSource) {
-    const gl = canvas.getContext('webgl2', {
-      alpha: true,
-      antialias: false,
-      depth: false,
-      stencil: false,
-      powerPreference: 'high-performance'
-    });
-    if (!gl) return null;
-    const vertexSource = `#version 300 es
-const vec2 corners[3] = vec2[3](vec2(-1.0,-1.0),vec2(3.0,-1.0),vec2(-1.0,3.0));
-void main(){gl_Position=vec4(corners[gl_VertexID],0.0,1.0);}`;
-    const compile = (type, source) => {
-      const shader = gl.createShader(type);
-      if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        gl.deleteShader(shader);
-        return null;
-      }
-      return shader;
-    };
-    const v = compile(gl.VERTEX_SHADER, vertexSource);
-    const f = compile(gl.FRAGMENT_SHADER, fragmentSource);
-    if (!v || !f) return null;
-    const program = gl.createProgram();
-    if (!program) return null;
-    gl.attachShader(program,v); gl.attachShader(program,f); gl.linkProgram(program);
-    gl.deleteShader(v); gl.deleteShader(f);
-    if (!gl.getProgramParameter(program,gl.LINK_STATUS)) return null;
-    const vao=gl.createVertexArray();
-    return {gl,program,vao,loc:name=>gl.getUniformLocation(program,name)};
+  const VERTEX = `#version 300 es
+in vec2 aPosition;
+void main(){gl_Position=vec4(aPosition,0.0,1.0);}`;
+
+  const FRAGMENT = `#version 300 es
+precision highp float;
+precision highp int;
+uniform vec2 uResolution;
+uniform float uTime;
+uniform vec3 uStops[5];
+uniform int uStopCount;
+uniform float uAmplitude;
+uniform float uBlend;
+uniform float uHeight;
+uniform float uScale;
+uniform float uGlow;
+uniform float uBrightness;
+uniform int uLayers;
+uniform float uFlip;
+uniform vec3 uPointer;
+uniform float uReveal;
+uniform float uOpacity;
+uniform float uLightMode;
+out vec4 outColor;
+
+vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}
+float snoise(vec2 v){
+ const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+ vec2 i=floor(v+dot(v,C.yy)); vec2 x0=v-i+dot(i,C.xx);
+ vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
+ vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod(i,289.0);
+ vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
+ vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);
+ m=m*m;m=m*m; vec3 x=2.0*fract(p*C.www)-1.0; vec3 h=abs(x)-0.5; vec3 ox=floor(x+0.5); vec3 a0=x-ox;
+ m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
+ vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+ return 130.0*dot(m,g);
+}
+float smootherstep(float a,float b,float x){float t=clamp((x-a)/(b-a),0.0,1.0);return t*t*t*(t*(t*6.0-15.0)+10.0);}
+vec3 oklabToLinear(vec3 c){
+ float l=c.x+0.3963377774*c.y+0.2158037573*c.z;
+ float m=c.x-0.1055613458*c.y-0.0638541728*c.z;
+ float s=c.x-0.0894841775*c.y-1.2914855480*c.z;
+ l=l*l*l;m=m*m*m;s=s*s*s;
+ return vec3(4.0767416621*l-3.3077115913*m+0.2309699292*s,-1.2684380046*l+2.6097574011*m-0.3413193965*s,-0.0041960863*l-0.7034186147*m+1.7076147010*s);
+}
+vec3 toSrgb(vec3 c){c=clamp(c,0.0,1.0);return mix(c*12.92,1.055*pow(c,vec3(1.0/2.4))-0.055,step(0.0031308,c));}
+vec3 ramp(float t){
+ float x=clamp(t,0.0,1.0)*float(uStopCount-1);
+ int i=int(min(floor(x),float(uStopCount-2))); float f=x-float(i); f=f*f*(3.0-2.0*f);
+ vec3 lch=mix(uStops[i],uStops[i+1],f);
+ return toSrgb(oklabToLinear(vec3(lch.x,lch.y*cos(lch.z),lch.y*sin(lch.z))));
+}
+float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+void main(){
+ vec2 frag=gl_FragCoord.xy; float y=1.0-frag.y/uResolution.y; y=mix(y,1.0-y,uFlip);
+ float ux=frag.x/uResolution.x; float X=(frag.x-uResolution.x*0.5)/uResolution.y; float t=uTime;
+ float reach=uPointer.z*exp(-pow((X-uPointer.x)/0.38,2.0));
+ vec3 glow=vec3(0.0);float cover=0.0;
+ for(int k=0;k<3;k++){
+  if(k>=uLayers)break;float layer=float(k);float seed=layer*13.7;float pace=t*(1.0-layer*0.18);
+  float warp=snoise(vec2(X*0.45*uScale+pace*0.02+seed,pace*0.05+seed));
+  float wave=snoise(vec2(X*0.75*uScale+warp*0.35-pace*0.03+seed,pace*0.07-seed))*0.72+snoise(vec2(X*1.6*uScale+warp*0.5+pace*0.04-seed,pace*0.1+seed*0.5))*0.28;
+  float hem=uHeight+layer*0.07+wave*0.15*uAmplitude;hem+=reach*0.08*(layer<0.5?1.0:0.4);hem=mix(-0.25,hem,uReveal);
+  float soft=(0.04+uBlend*0.16)*(1.0+layer*0.9);float rise=hem-y;float low=-soft-uGlow*0.14;float high=0.26+soft*0.6;
+  float body=pow(smootherstep(low,high,rise),1.5+uGlow*0.6);
+  float lobes=0.86+0.14*snoise(vec2(X*0.9*uScale-pace*0.025+seed,y*0.3+pace*0.04));
+  float alpha=body*lobes*(layer<0.5?1.0:0.32/layer);
+  alpha=clamp(alpha*(1.0+reach*0.25*smootherstep(0.9,0.0,abs(y-hem))),0.0,1.0);
+  vec3 tint=ramp(ux+0.05*sin(pace*0.08+layer*2.3)+layer*0.1+max(rise,0.0)*0.05);
+  glow=1.0-(1.0-glow)*(1.0-tint*alpha);cover=1.0-(1.0-cover)*(1.0-alpha);
+ }
+ float fade=smootherstep(0.0,0.7,uReveal)*uOpacity;float strength=clamp(uBrightness,0.0,2.0);
+ glow*=fade*min(strength,1.0);cover*=fade*min(strength,1.0);glow=1.0-pow(1.0-glow,vec3(max(strength,1.0)));
+ float dither=(hash(frag)-0.5)/255.0;outColor=vec4(glow+dither,clamp(cover+dither,0.0,1.0));
+}`;
+
+  const compile=(gl,type,source)=>{
+    const shader=gl.createShader(type); if(!shader)return null;
+    gl.shaderSource(shader,source);gl.compileShader(shader);
+    if(gl.getShaderParameter(shader,gl.COMPILE_STATUS))return shader;
+    gl.deleteShader(shader);return null;
+  };
+  const createProgram=(gl,fragment)=>{
+    const v=compile(gl,gl.VERTEX_SHADER,VERTEX),f=compile(gl,gl.FRAGMENT_SHADER,fragment),p=gl.createProgram();
+    if(!v||!f||!p)return null;
+    gl.attachShader(p,v);gl.attachShader(p,f);gl.bindAttribLocation(p,0,'aPosition');gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);
+    if(!gl.getProgramParameter(p,gl.LINK_STATUS)){gl.deleteProgram(p);return null;}
+    return p;
+  };
+
+  const gl=auroraCanvas.getContext('webgl2',{alpha:true,premultipliedAlpha:true,antialias:false,depth:false,stencil:false,powerPreference:'high-performance'});
+  if(!gl)return;
+
+  const program=createProgram(gl,FRAGMENT); if(!program)return;
+  const vao=gl.createVertexArray(),buffer=gl.createBuffer();
+  gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+
+  const U={};for(const n of ['uResolution','uTime','uStops','uStopCount','uAmplitude','uBlend','uHeight','uScale','uGlow','uBrightness','uLayers','uFlip','uPointer','uReveal','uOpacity'])U[n]=gl.getUniformLocation(program,n);
+
+  const probe=document.createElement('canvas').getContext('2d',{willReadFrequently:true});
+  const cache=new Map();
+  const parse=value=>{
+    if(cache.has(value))return cache.get(value);
+    let rgb=[1,1,1];
+    if(probe){probe.clearRect(0,0,1,1);probe.fillStyle=value;probe.fillRect(0,0,1,1);const d=probe.getImageData(0,0,1,1).data;rgb=[d[0]/255,d[1]/255,d[2]/255];}
+    cache.set(value,rgb);return rgb;
+  };
+  const toOklch=rgb=>{
+    const [r,g,b]=rgb.map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));
+    const l=Math.cbrt(.4122214708*r+.5363325363*g+.0514459929*b),m=Math.cbrt(.2119034982*r+.6806995451*g+.1073969566*b),s=Math.cbrt(.0883024619*r+.2817188376*g+.6299787005*b);
+    const lab=[.2104542553*l+.793617785*m-.0040720468*s,1.9779984951*l-2.4285922051*m+.4505937099*s,.0259040371*l+.7827717662*m-.808675766*s];
+    return [lab[0],Math.hypot(lab[1],lab[2]),Math.atan2(lab[2],lab[1])];
+  };
+  const stops=['#2563eb','#38bdf8','#7c3aed'].map(v=>toOklch(parse(v)));
+  const palette=new Float32Array(15);
+  stops.forEach((v,i)=>palette.set(v,i*3));
+
+  const state={w:1,h:1,dpr:1,px:0,py:.5,reach:0,clock:0,reveal:reduced?1:0,raf:0};
+  const pointer={x:0,y:0,inside:false};
+  const resize=()=>{
+    const r=hero.getBoundingClientRect();state.w=Math.max(1,r.width);state.h=Math.max(1,r.height);
+    state.dpr=Math.min(window.devicePixelRatio||1,2,Math.sqrt(2.4e6/(state.w*state.h)));
+    auroraCanvas.width=Math.max(1,Math.round(state.w*state.dpr));auroraCanvas.height=Math.max(1,Math.round(state.h*state.dpr));render();
+  };
+  const render=()=>{
+    gl.viewport(0,0,auroraCanvas.width,auroraCanvas.height);gl.useProgram(program);gl.bindVertexArray(vao);
+    gl.uniform2f(U.uResolution,auroraCanvas.width,auroraCanvas.height);gl.uniform1f(U.uTime,state.clock);
+    gl.uniform3fv(U.uStops,palette);gl.uniform1i(U.uStopCount,3);gl.uniform1f(U.uAmplitude,.9);gl.uniform1f(U.uBlend,.55);
+    gl.uniform1f(U.uHeight,.55);gl.uniform1f(U.uScale,.85);gl.uniform1f(U.uGlow,.8);gl.uniform1f(U.uBrightness,1);
+    gl.uniform1i(U.uLayers,2);gl.uniform1f(U.uFlip,1);gl.uniform3f(U.uPointer,state.px,state.py,state.reach);
+    gl.uniform1f(U.uReveal,1-Math.pow(1-state.reveal,3));gl.uniform1f(U.uOpacity,.78);gl.drawArrays(gl.TRIANGLES,0,3);
+  };
+  let last=0;
+  const frame=now=>{
+    const dt=last?Math.min((now-last)/1000,.05):1/60;last=now;state.clock+=dt*(reduced?.15:1);
+    const engaged=!reduced&&pointer.inside;const follow=1-Math.exp(-dt/.6);
+    if(engaged){state.px+=((pointer.x-state.w/2)/state.h-state.px)*follow;state.py+=(1-pointer.y/state.h-state.py)*follow;}
+    state.reach+=( (engaged?1:0)-state.reach )*(1-Math.exp(-dt/(engaged?.9:1.4)));
+    if(reduced)state.reveal=1;else if(state.reveal<1)state.reveal=Math.min(1,state.reveal+dt/2.4);
+    render();state.raf=requestAnimationFrame(frame);
+  };
+  const move=e=>{const r=hero.getBoundingClientRect();pointer.x=e.clientX-r.left;pointer.y=e.clientY-r.top;pointer.inside=pointer.x>=0&&pointer.y>=0&&pointer.x<=r.width&&pointer.y<=r.height;};
+  const ro=new ResizeObserver(resize);ro.observe(hero);
+  window.addEventListener('pointermove',move,{passive:true});window.addEventListener('resize',resize,{passive:true});
+  resize();state.raf=requestAnimationFrame(frame);
+
+  if(glassCanvas){
+    const gg=glassCanvas.getContext('2d');
+    if(gg){
+      let t=0;
+      const glass=()=>{
+        const r=glassCanvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2),w=Math.max(1,r.width),h=Math.max(1,r.height);
+        if(glassCanvas.width!==Math.round(w*d)||glassCanvas.height!==Math.round(h*d)){glassCanvas.width=Math.round(w*d);glassCanvas.height=Math.round(h*d);}
+        t+=.016;gg.clearRect(0,0,w*d,h*d);gg.fillStyle='rgba(255,255,255,.035)';
+        for(let i=0;i<120;i++){const x=((i*73.17+t*4)% (w*d)),y=((i*41.37+t*2)%(h*d));gg.fillRect(x,y,1,1);}
+        requestAnimationFrame(glass);
+      };glass();
+    }
   }
 
-  const ray = setupWebGL(rayCanvas,`#version 300 es
-precision highp float;
-uniform vec2 uResolution;
-uniform float uTime;
-uniform vec2 uSource;
-uniform vec2 uAim;
-uniform float uReach;
-uniform float uSpread;
-uniform float uGlow;
-uniform float uHaze;
-uniform float uIntensity;
-out vec4 fragColor;
-float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
-float noise(vec2 p){vec2 i=floor(p),f=fract(p);vec2 w=f*f*f*(f*(f*6.0-15.0)+10.0);return mix(mix(hash(i),hash(i+vec2(1,0)),w.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),w.x),w.y);}
-void main(){
-  vec2 coord=vec2(gl_FragCoord.x,uResolution.y-gl_FragCoord.y);
-  vec2 d=coord-uSource; float dist=length(d); vec2 dir=d/max(dist,.0001);
-  float ca=dot(dir,uAim); float depth=dist/uReach;
-  float spread=pow(max(ca,0.0),1.0/max(uSpread,.05));
-  float fall=clamp(1.0-depth*0.92,0.0,1.0);
-  float source=exp(-depth*depth*8.0)*uGlow;
-  float haze=.7+.3*noise(vec2(ca*8.0+uTime*.035,depth*3.2-uTime*.08));
-  float shafts=.62+.20*sin(ca*36.0+uTime*1.1)+.16*cos(ca*19.0-uTime*.7);
-  float shafts2=.64+.18*sin(ca*22.0-uTime*.8)+.14*cos(ca*43.0+uTime);
-  float light=(spread*(.52*shafts+.48*shafts2)*mix(1.0,haze,uHaze)*fall+source);
-  light*=smoothstep(-.02,.12,ca);
-  light*=1.0-smoothstep(.72,1.05,depth);
-  vec3 tint=mix(vec3(.72,.84,1.0),vec3(1.0,.94,.82),smoothstep(0.0,.9,depth));
-  float a=clamp(light*.42*uIntensity,0.0,.42);
-  fragColor=vec4(tint*light*.72,a);
-}`);
-
-  const glass = glassCanvas ? setupWebGL(glassCanvas,`#version 300 es
-precision highp float;
-uniform vec2 uResolution;
-uniform float uTime;
-uniform vec2 uPointer;
-out vec4 fragColor;
-float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-void main(){
-  vec2 uv=gl_FragCoord.xy/uResolution;
-  float edge=min(min(uv.x,1.-uv.x),min(uv.y,1.-uv.y));
-  float top=exp(-pow((uv.y-.08)*5.0,2.0));
-  float pointer=exp(-length(uv-uPointer)*8.0);
-  float grain=(hash(gl_FragCoord.xy+uTime*.02)-.5)*.025;
-  float sheen=.16*top+.08*pointer;
-  fragColor=vec4(vec3(.92,.96,1.0)*(sheen+grain),.18*sheen+.035);
-}`) : null;
-
-  const instances=[ray,glass].filter(Boolean);
-  if (!ray) { rayCanvas.style.display='none'; return; }
-
-  const state={w:1,h:1,dpr:1,px:.5,py:.35,aimX:0,aimY:1,raf:0,visible:true,start:performance.now()};
-  const resize=()=>{
-    const rect=hero.getBoundingClientRect();
-    state.w=Math.max(1,rect.width); state.h=Math.max(1,rect.height);
-    state.dpr=Math.min(window.devicePixelRatio||1,1.5,Math.sqrt(2.4e6/(state.w*state.h)));
-    for(const item of instances){
-      const c=item===ray?rayCanvas:glassCanvas;
-      c.width=Math.max(1,Math.round(state.w*state.dpr));
-      c.height=Math.max(1,Math.round(state.h*state.dpr));
-    }
-  };
-  const move=e=>{
-    const r=hero.getBoundingClientRect();
-    state.px=Math.max(0,Math.min(1,(e.clientX-r.left)/Math.max(1,r.width)));
-    state.py=Math.max(0,Math.min(1,(e.clientY-r.top)/Math.max(1,r.height)));
-  };
-  const frame=now=>{
-    state.raf=0;
-    if(!state.visible)return;
-    const t=(now-state.start)/1000;
-    const tx=state.px*2-1, ty=1-state.py*2;
-    state.aimX+=(tx-state.aimX)*.045; state.aimY+=(ty-state.aimY)*.045;
-    const len=Math.hypot(state.aimX,state.aimY)||1;
-    const dx=state.aimX/len,dy=state.aimY/len;
-    const gl=ray.gl;
-    gl.viewport(0,0,rayCanvas.width,rayCanvas.height);
-    gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.useProgram(ray.program); gl.bindVertexArray(ray.vao);
-    gl.uniform2f(ray.loc('uResolution'),rayCanvas.width,rayCanvas.height);
-    gl.uniform1f(ray.loc('uTime'),t*(reduced?.35:1));
-    gl.uniform2f(ray.loc('uSource'),state.w*.5*state.dpr,-state.h*.14*state.dpr);
-    gl.uniform2f(ray.loc('uAim'),dx,dy);
-    gl.uniform1f(ray.loc('uReach'),Math.max(state.w,state.h)*state.dpr*1.15);
-    gl.uniform1f(ray.loc('uSpread'),.52); gl.uniform1f(ray.loc('uGlow'),.8); gl.uniform1f(ray.loc('uHaze'),.32); gl.uniform1f(ray.loc('uIntensity'),.95);
-    gl.drawArrays(gl.TRIANGLES,0,3);
-
-    if(glass){
-      const g=glass.gl;
-      g.viewport(0,0,glassCanvas.width,glassCanvas.height); g.clearColor(0,0,0,0); g.clear(g.COLOR_BUFFER_BIT); g.useProgram(glass.program); g.bindVertexArray(glass.vao);
-      g.uniform2f(glass.loc('uResolution'),glassCanvas.width,glassCanvas.height);
-      g.uniform1f(glass.loc('uTime'),t); g.uniform2f(glass.loc('uPointer'),state.px,state.py); g.drawArrays(g.TRIANGLES,0,3);
-    }
-    if(!reduced || Math.abs(dx-state.aimX)>.0005) state.raf=requestAnimationFrame(frame);
-    else state.raf=requestAnimationFrame(frame);
-  };
-
-  const ro=new ResizeObserver(resize); ro.observe(hero);
-  window.addEventListener('pointermove',move,{passive:true});
-  resize(); state.raf=requestAnimationFrame(frame);
-  window.addEventListener('resize',resize,{passive:true});
+  window.addEventListener('beforeunload',()=>{cancelAnimationFrame(state.raf);ro.disconnect();gl.deleteProgram(program);gl.deleteBuffer(buffer);gl.deleteVertexArray(vao);});
 })();
