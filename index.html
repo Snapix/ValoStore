@@ -21,7 +21,7 @@ a{text-decoration:none;color:inherit}
 .wordmark{font-size:18px;font-weight:800;letter-spacing:-.7px}
 .wordmark span{color:var(--blue)}
 .main{width:100%;margin:0;padding:0;position:relative;z-index:2;flex:1}
-.hero{position:relative;min-height:calc(100vh - 72px);width:100%;display:flex;align-items:center;justify-content:center;text-align:center;isolation:isolate;overflow:hidden;padding:0 24px}.hero-content{position:relative;z-index:3;width:min(820px,100%);display:flex;justify-content:center}.light-rays{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.light-rays canvas{display:block;width:100%;height:100%}
+.hero{position:relative;min-height:calc(100vh - 72px);width:100%;display:flex;align-items:center;justify-content:center;text-align:center;isolation:isolate;overflow:hidden;padding:0 24px}.hero-content{position:relative;z-index:3;width:min(820px,100%);display:flex;justify-content:center}.aurora-container{position:absolute;inset:0;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}.aurora-canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 .hero h1{display:none}
 .search-pill{height:72px;width:min(820px,100%);display:flex;align-items:center;gap:16px;padding:0 23px;border:1px solid rgba(255,255,255,.78);border-radius:999px;background:rgba(255,255,255,.18);box-shadow:0 16px 48px rgba(20,30,45,.13),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(120,140,160,.16);backdrop-filter:blur(15px) saturate(150%);-webkit-backdrop-filter:blur(15px) saturate(150%);position:relative;overflow:hidden;transition:.22s ease;isolation:isolate}.search-pill .glass-noise{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.7;mix-blend-mode:soft-light}.search-pill .glass-sheen{position:absolute;inset:1px;z-index:0;pointer-events:none;border-radius:inherit;background:radial-gradient(120% 180% at 12% 0%,rgba(255,255,255,.78),transparent 34%),linear-gradient(110deg,rgba(255,255,255,.34),transparent 38%,rgba(255,255,255,.16) 70%,rgba(255,255,255,.46));box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
 .search-pill:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.2),transparent 55%,rgba(255,255,255,.08));pointer-events:none;z-index:1}.search-pill>*:not(.glass-noise):not(.glass-sheen){position:relative;z-index:2}.search-pill:focus-within{border-color:rgba(130,145,160,.62);box-shadow:0 14px 42px rgba(20,30,45,.14),inset 0 1px 0 rgba(255,255,255,.95)}
@@ -84,7 +84,7 @@ a{text-decoration:none;color:inherit}
 <header class="mast"><a class="wordmark" href="./">valo<span>store</span></a></header>
 <main class="main">
 <section class="hero">
-<div class="light-rays" aria-hidden="true"><canvas id="lightRays"></canvas></div>
+<div class="aurora-container" aria-hidden="true"><canvas id="auroraCanvas" class="aurora-canvas"></canvas></div>
 <div class="hero-content">
 <label class="search-pill">
 <canvas class="glass-noise" id="glassNoise" aria-hidden="true"></canvas><span class="glass-sheen" aria-hidden="true"></span>
